@@ -25,7 +25,7 @@ public class QuizController {
 
     @GetMapping("/start")
     public void startGame() {
-       String res = openAiService.generateQuestions("Generate 6 easy General Knowledge questions with 4 options and right answer?");
+       String res = openAiService.generateQuestions("Generate 2 easy Science questions with 4 options and right answer?");
         System.out.println(res);
     }
 
