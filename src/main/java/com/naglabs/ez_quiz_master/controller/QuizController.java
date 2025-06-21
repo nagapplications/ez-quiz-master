@@ -1,0 +1,38 @@
+package com.naglabs.ez_quiz_master.controller;
+
+import com.naglabs.ez_quiz_master.controller.service.OpenAiService;
+import com.naglabs.ez_quiz_master.controller.service.dto.Question;
+import com.naglabs.ez_quiz_master.controller.service.dto.QuestionResponse;
+import com.naglabs.ez_quiz_master.controller.service.dto.ResultRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/quiz")
+public class QuizController {
+
+    @Autowired
+    private OpenAiService openAiService;
+
+//    @PostMapping("/start")
+//    public ResponseEntity<QuestionResponse> startGame() {
+//        List<Question> questions = openAiService.generateQuestions();
+//        return ResponseEntity.ok(new QuestionResponse(questions));
+//    }
+
+    @GetMapping("/start")
+    public void startGame() {
+       String res = openAiService.generateQuestions("What is black hole?");
+        System.out.println(res);
+    }
+
+    @PostMapping("/submit")
+    public ResponseEntity<String> submitResult(@RequestBody ResultRequest result) {
+        // Call emailService.sendResultEmail(result)
+        return ResponseEntity.ok("Result submitted and emailed!");
+    }
+}
+
