@@ -1,6 +1,7 @@
 package com.naglabs.ez_quiz_master.controller.service;
 
 import com.naglabs.ez_quiz_master.controller.service.dto.Question;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -18,10 +19,21 @@ import java.util.Map;
 @Service
 public class OpenAiService {
 
+
     private final WebClient webClient;
 
-    public OpenAiService(@Value("${openai.url}") String baseUrl,
-                         @Value("${openai.apikey}") String apiKey) {
+    public OpenAiService() {
+        Dotenv dotenv = Dotenv.configure()
+                .ignoreIfMissing()
+                .load();  // Loads .env from project root
+
+        String apiKey = dotenv.get("openai.apikey");
+        String baseUrl = dotenv.get("openai.url");
+
+        // Optional debug
+        System.out.println("Loaded API Key: " + (apiKey != null ? "✔" : "✘"));
+        System.out.println("Loaded Base URL: " + baseUrl);
+
         this.webClient = WebClient.builder()
                 .baseUrl(baseUrl)
                 .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey)
