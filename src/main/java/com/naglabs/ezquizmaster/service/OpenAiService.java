@@ -1,4 +1,4 @@
-package com.naglabs.ezquizmaster.controller.service;
+package com.naglabs.ezquizmaster.service;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.http.HttpHeaders;

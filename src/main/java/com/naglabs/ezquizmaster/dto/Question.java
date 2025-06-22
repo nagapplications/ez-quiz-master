@@ -1,4 +1,4 @@
-package com.naglabs.ezquizmaster.controller.service.dto;
+package com.naglabs.ezquizmaster.dto;
 
 import java.util.List;
 
