@@ -1,9 +1,9 @@
-package com.naglabs.ez_quiz_master.controller;
+package com.naglabs.ezquizmaster.controller;
 
-import com.naglabs.ez_quiz_master.controller.service.OpenAiService;
-import com.naglabs.ez_quiz_master.controller.service.dto.Question;
-import com.naglabs.ez_quiz_master.controller.service.dto.QuestionResponse;
-import com.naglabs.ez_quiz_master.controller.service.dto.ResultRequest;
+import com.naglabs.ezquizmaster.controller.service.OpenAiService;
+import com.naglabs.ezquizmaster.controller.service.dto.Question;
+import com.naglabs.ezquizmaster.controller.service.dto.QuestionResponse;
+import com.naglabs.ezquizmaster.controller.service.dto.ResultRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

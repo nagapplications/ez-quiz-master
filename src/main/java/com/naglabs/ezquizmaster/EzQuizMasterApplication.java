@@ -1,4 +1,4 @@
-package com.naglabs.ez_quiz_master;
+package com.naglabs.ezquizmaster;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,8 +1,6 @@
-package com.naglabs.ez_quiz_master.controller.service;
+package com.naglabs.ezquizmaster.controller.service;
 
-import com.naglabs.ez_quiz_master.controller.service.dto.Question;
 import io.github.cdimascio.dotenv.Dotenv;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -18,7 +16,6 @@ import java.util.Map;
 
 @Service
 public class OpenAiService {
-
 
     private final WebClient webClient;
 
@@ -59,6 +56,3 @@ public class OpenAiService {
         return response;
     }
 }
-
-
-

@@ -1,4 +1,4 @@
-package com.naglabs.ez_quiz_master.controller.service.dto;
+package com.naglabs.ezquizmaster.controller.service.dto;
 
 import java.util.List;
 
@@ -10,4 +10,3 @@ public class Question {
     private String correctAnswer;
     private String alternateQuestionId;
 }
-
