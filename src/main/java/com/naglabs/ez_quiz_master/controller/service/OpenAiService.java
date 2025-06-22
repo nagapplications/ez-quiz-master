@@ -23,31 +23,23 @@ public class OpenAiService {
     private final WebClient webClient;
 
     public OpenAiService() {
-        Dotenv dotenv = Dotenv.configure()
-                .ignoreIfMissing()
-                .load();  // Loads .env from project root
-
+        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();  // Loads .env from project root
         String apiKey = dotenv.get("openai.apikey");
         String baseUrl = dotenv.get("openai.url");
 
-        // Optional debug
-        System.out.println("Loaded API Key: " + (apiKey != null ? "✔" : "✘"));
-        System.out.println("Loaded Base URL: " + baseUrl);
-
         this.webClient = WebClient.builder()
-                .baseUrl(baseUrl)
-                .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
+                                  .baseUrl(baseUrl)
+                                  .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey)
+                                  .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                                  .build();
     }
 
     public String generateQuestions(String prompt) {
         Map<String, Object> requestBody = Map.of(
                 "model", "gpt-3.5-turbo",
                 "messages", List.of(Map.of("role", "user", "content", prompt)),
-                "temperature", 0.7
+                "temperature", 1.0
         );
-
 
         String response = webClient.post()
                 .bodyValue(requestBody)
@@ -55,7 +47,6 @@ public class OpenAiService {
                 .onStatus(HttpStatusCode::isError, clientResponse ->
                         clientResponse.bodyToMono(String.class)
                                 .flatMap(errorBody -> {
-                                    System.err.println("OpenAI API Error: " + errorBody);
                                     return Mono.error(new RuntimeException("OpenAI error: " + errorBody));
                                 })
                 )
