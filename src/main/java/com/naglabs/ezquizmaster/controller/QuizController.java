@@ -1,11 +1,12 @@
 package com.naglabs.ezquizmaster.controller;
 
-import com.naglabs.ezquizmaster.controller.service.OpenAiService;
-import com.naglabs.ezquizmaster.controller.service.dto.Question;
-import com.naglabs.ezquizmaster.controller.service.dto.QuestionResponse;
-import com.naglabs.ezquizmaster.controller.service.dto.ResultRequest;
+import com.naglabs.ezquizmaster.dto.Question;
+import com.naglabs.ezquizmaster.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,24 +16,55 @@ import java.util.List;
 public class QuizController {
 
     @Autowired
-    private OpenAiService openAiService;
+    private QuizService quizService;
 
-//    @PostMapping("/start")
-//    public ResponseEntity<QuestionResponse> startGame() {
-//        List<Question> questions = openAiService.generateQuestions();
-//        return ResponseEntity.ok(new QuestionResponse(questions));
-//    }
-
+    //frontend need to call the below with post including jsession id, till then its get
     @GetMapping("/start")
-    public void startGame() {
-       String res = openAiService.generateQuestions("Generate 2 easy Science questions with 4 options and right answer?");
-        System.out.println(res);
+    public ResponseEntity<String> startQuiz(@AuthenticationPrincipal OAuth2User principal) throws Exception {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+        }
+
+        String email = principal.getAttribute("email");
+        if (email == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email not found in user details");
+        }
+
+        System.out.println("Starting quiz for user email: " + email);
+        String sessionId = quizService.startQuiz(email);
+        System.out.println("Quiz session created with ID: " + sessionId);
+        return ResponseEntity.ok(sessionId);
     }
 
-    @PostMapping("/submit")
-    public ResponseEntity<String> submitResult(@RequestBody ResultRequest result) {
-        // Call emailService.sendResultEmail(result)
-        return ResponseEntity.ok("Result submitted and emailed!");
+
+
+    @GetMapping("/question")
+    public ResponseEntity<Question> getNextQuestion(@RequestParam String sessionId) throws Exception {
+        Question q = quizService.getNextQuestion(sessionId);
+        return q == null ? ResponseEntity.noContent().build() : ResponseEntity.ok(q);
     }
+
+    @PostMapping("/answer")
+    public ResponseEntity<Boolean> submitAnswer(@RequestParam String sessionId, @RequestParam String option) throws Exception {
+        boolean correct = quizService.submitAnswer(sessionId, option);
+        return ResponseEntity.ok(correct);
+    }
+
+    @PostMapping("/lifeline/alternate")
+    public ResponseEntity<Question> useAlternate(@RequestParam String sessionId) {
+        return ResponseEntity.ok(quizService.useAlternateQuestion(sessionId));
+    }
+
+    @PostMapping("/lifeline/fiftyfifty")
+    public ResponseEntity<List<String>> useFiftyFifty(@RequestParam String sessionId) {
+        return ResponseEntity.ok(quizService.useFiftyFifty(sessionId));
+    }
+
+    @PostMapping("/lifeline/second-chance")
+    public ResponseEntity<Void> useSecondChance(@RequestParam String sessionId) {
+        quizService.useSecondChance(sessionId);
+        return ResponseEntity.ok().build();
+    }
+
 }
 

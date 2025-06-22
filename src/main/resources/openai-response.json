@@ -1,0 +1,36 @@
+{
+  "id": "chatcmpl-BlJK5qVaqLTgwloiVjQ70iFPvfqhp",
+  "object": "chat.completion",
+  "created": 1750615393,
+  "model": "gpt-3.5-turbo-0125",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "1. Question: What is the capital of France?\n   Options: A) London B) Berlin C) Paris D) Rome\n   CorrectOption: C\n   Difficulty: easy\n\n2. Question: How many continents are there in the world?\n   Options: A) 5 B) 6 C) 7 D) 8\n   CorrectOption: C\n   Difficulty: easy\n\n3. Question: What is the largest mammal on Earth?\n   Options: A) Elephant B) Blue whale C) Giraffe D) Gorilla\n   CorrectOption: B\n   Difficulty: easy\n\n4. Question: Who wrote the play \"Romeo and Juliet\"?\n   Options: A) William Shakespeare B) Jane Austen C) Charles Dickens D) Mark Twain\n   CorrectOption: A\n   Difficulty: easy\n\n5. Question: In which country would you find the Great Wall?\n   Options: A) Japan B) China C) India D) Brazil\n   CorrectOption: B\n   Difficulty: easy\n\n6. Question: What is the chemical symbol for gold?\n   Options: A) Ag B) Au C) Fe D) Hg\n   CorrectOption: B\n   Difficulty: easy\n\n7. Question: What is the tallest mountain in the world?\n   Options: A) Mount Kilimanjaro B) Mount Everest C) Mount Fuji D) Mount McKinley\n   CorrectOption: B\n   Difficulty: medium\n\n8. Question: Which planet is known as the \"Red Planet\"?\n   Options: A) Jupiter B) Mars C) Saturn D) Venus\n   CorrectOption: B\n   Difficulty: medium\n\n9. Question: Who was the first President of the United States?\n   Options: A) Thomas Jefferson B) George Washington C) John Adams D) Abraham Lincoln\n   CorrectOption: B\n   Difficulty: medium\n\n10. Question: What is the primary language spoken in Brazil?\n    Options: A) Spanish B) Portuguese C) French D) Italian\n    CorrectOption: B\n    Difficulty: medium\n\n11. Question: Which famous scientist developed the theory of relativity?\n    Options: A) Isaac Newton B) Galileo Galilei C) Albert Einstein D) Stephen Hawking\n    CorrectOption: C\n    Difficulty: medium\n\n12. Question: Who painted the Mona Lisa?\n    Options: A) Vincent van Gogh B) Leonardo da Vinci C) Michelangelo D) Pablo Picasso\n    CorrectOption: B\n    Difficulty: medium\n\n13. Question: Which country is known as the Land of the Rising Sun?\n    Options: A) China B) Japan C) South Korea D) Vietnam\n    CorrectOption: B\n    Difficulty: medium\n\n14. Question: What is the chemical symbol for iron?\n    Options: A) Ir B) Fe C) Si D) In\n    CorrectOption: B\n    Difficulty: hard\n\n15. Question: Who composed the famous piece \"Moonlight Sonata\"?\n    Options: A) Ludwig van Beethoven B) Wolfgang Amadeus Mozart C) Johann Sebastian Bach D) Frederic Chopin\n    CorrectOption: A\n    Difficulty: hard\n\n16. Question: How many players are there on a rugby union team?\n    Options: A) 11 B) 15 C) 9 D) 13\n    CorrectOption: B\n    Difficulty: hard\n\n17. Question: Which planet is the hottest in the solar system?\n    Options: A) Venus B) Mercury C) Jupiter D) Mars\n    CorrectOption: A\n    Difficulty: hard\n\n18. Question: What is the longest river in the world?\n    Options: A) Amazon B) Nile C) Yangtze D) Mississippi\n    CorrectOption: A\n    Difficulty: hard\n\n19. Question: Who was the Greek goddess of wisdom?\n    Options: A) Aphrodite B) Athena C) Hera D) Artemis\n    CorrectOption: B\n    Difficulty: evil\n\n20. Question: What is the largest organ in the human body?\n    Options: A) Liver B) Heart C) Skin D) Brain\n    CorrectOption: C\n    Difficulty: evil",
+        "refusal": null,
+        "annotations": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 115,
+    "completion_tokens": 871,
+    "total_tokens": 986,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "service_tier": "default",
+  "system_fingerprint": null
+}

@@ -1,5 +1,8 @@
 package com.naglabs.ezquizmaster.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.naglabs.ezquizmaster.dto.OpenAiResponse;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -10,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
+import java.io.InputStream;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +57,24 @@ public class OpenAiService {
                         .filter(e -> e instanceof WebClientResponseException.TooManyRequests))
                 .block();
         System.out.println("OpenAI raw response: " + response);
+        return response;
+    }
+
+    public OpenAiResponse generateQuestionsLocal(String prompt) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        OpenAiResponse response = null;
+        try (InputStream inputStream = OpenAiService.class.getClassLoader()
+                .getResourceAsStream("openai-response.json")) {
+            response = objectMapper.readValue(
+                    inputStream,
+                    new TypeReference<OpenAiResponse>() {
+                    }
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("OpenAI raw response local: " + response);
         return response;
     }
 }
