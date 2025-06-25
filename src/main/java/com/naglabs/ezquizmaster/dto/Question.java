@@ -2,24 +2,26 @@ package com.naglabs.ezquizmaster.dto;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class Question {
-    private String id;
-    private String difficulty; // easy, medium, hard, evil
-    private String questionText;
+    private Integer id;
+    private String question;
     private List<String> options;
-    private String correctAnswer;
-    private String alternateQuestionId;
-}
+    private String difficultyLevel; // easy, medium, hard, evil
+    private String correctOption;
 
-//"question": "What is the capital of France?",
-//        "options": {
-//        "A": "London",
-//        "B": "Berlin",
-//        "C": "Paris",
-//        "D": "Rome"
-//        },
-//        "correctOption": "C",
-//        "difficulty": "easy"
+    public Question() {
+    }
+
+    public Question(String question, List<String> options) {
+        this.question = question;
+        this.options = new ArrayList<>(options); // defensive copy even if caller forgets
+    }
+
+    public static Question copyOnlyQstnAndOptions(Question other) {
+        return new Question(other.question, new ArrayList<>(other.options));
+    }
+}

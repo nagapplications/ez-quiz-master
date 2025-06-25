@@ -7,9 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/quiz")
@@ -36,35 +37,38 @@ public class QuizController {
         return ResponseEntity.ok(sessionId);
     }
 
+    //TODO : AFTER UI IS READY, CHANGE THE BELOW TO POST MAPPINGS
 
-
-    @GetMapping("/question")
-    public ResponseEntity<Question> getNextQuestion(@RequestParam String sessionId) throws Exception {
-        Question q = quizService.getNextQuestion(sessionId);
-        return q == null ? ResponseEntity.noContent().build() : ResponseEntity.ok(q);
+    @GetMapping("/getQuestion")
+    public ResponseEntity<Question> getQuestion(@RequestParam("sessionId") String sessionId) throws Exception {
+        Question firstQuestion = quizService.getQuestion(sessionId);
+        return firstQuestion == null ? ResponseEntity.noContent().build() : ResponseEntity.ok(firstQuestion);
     }
 
-    @PostMapping("/answer")
-    public ResponseEntity<Boolean> submitAnswer(@RequestParam String sessionId, @RequestParam String option) throws Exception {
-        boolean correct = quizService.submitAnswer(sessionId, option);
-        return ResponseEntity.ok(correct);
+    @GetMapping("/submitAnswer")
+    public ResponseEntity<Question> submitAnswer(@RequestParam("sessionId") String sessionId, @RequestParam("option") String option) throws Exception {
+        Question nextQuestion = quizService.submitAnswer(sessionId, option);
+        return ResponseEntity.ok(nextQuestion);
     }
 
-    @PostMapping("/lifeline/alternate")
-    public ResponseEntity<Question> useAlternate(@RequestParam String sessionId) {
+    /*
+    @GetMapping("/lifeline/alternate")
+    public ResponseEntity<Question> useAlternate(@RequestParam("sessionId") String sessionId) {
         return ResponseEntity.ok(quizService.useAlternateQuestion(sessionId));
     }
 
-    @PostMapping("/lifeline/fiftyfifty")
-    public ResponseEntity<List<String>> useFiftyFifty(@RequestParam String sessionId) {
+    @GetMapping("/lifeline/fiftyfifty")
+    public ResponseEntity<List<String>> useFiftyFifty(@RequestParam("sessionId") String sessionId) {
         return ResponseEntity.ok(quizService.useFiftyFifty(sessionId));
     }
 
-    @PostMapping("/lifeline/second-chance")
-    public ResponseEntity<Void> useSecondChance(@RequestParam String sessionId) {
+    @GetMapping("/lifeline/second-chance")
+    public ResponseEntity<Void> useSecondChance(@RequestParam("sessionId") String sessionId) {
         quizService.useSecondChance(sessionId);
         return ResponseEntity.ok().build();
     }
+    */
+
 
 }
 

@@ -20,7 +20,7 @@ public class UserSession {
 
     private int score = 0;
 
-    private int remainingLifelines = 1;
+    private int remainingLifelines = 3;
 
     private boolean usedAlternate = false;
     private boolean usedFiftyFifty = false;

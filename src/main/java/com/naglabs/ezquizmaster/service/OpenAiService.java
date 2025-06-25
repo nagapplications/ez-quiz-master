@@ -37,7 +37,8 @@ public class OpenAiService {
 
     public String generateQuestions(String prompt) {
         Map<String, Object> requestBody = Map.of(
-                "model", "gpt-3.5-turbo",
+                //"model", "gpt-3.5-turbo", // commented, as it is not yeidling 19 questions accurately
+                "model", "gpt-4o",
                 "messages", List.of(Map.of("role", "user", "content", prompt)),
                 "temperature", 1.0
         );
