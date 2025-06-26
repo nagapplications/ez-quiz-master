@@ -119,5 +119,21 @@ public class QuizService {
         return sessionOriginalQuestionMap.get(qno);
     }
 
+    public List<String> useFiftyFifty(String sessionId) throws JsonProcessingException {
+        Question currentQuestion = getQuestionFromSession(sessionId, false);
+
+        List<String> wrongOptions = new ArrayList<>();
+        for (String eachOption : currentQuestion.getOptions()) {
+            if (!eachOption.equalsIgnoreCase(currentQuestion.getCorrectOption())) {
+                wrongOptions.add(eachOption);
+            }
+        }
+
+        // Shuffle and pick 2
+        Collections.shuffle(wrongOptions);
+        System.out.println(wrongOptions.get(0));
+        System.out.println(wrongOptions.get(1));
+        return Arrays.asList(wrongOptions.get(0), wrongOptions.get(1));
+    }
 }
 

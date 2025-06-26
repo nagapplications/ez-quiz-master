@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/quiz")
 public class QuizController {
@@ -62,12 +64,13 @@ public class QuizController {
         return ResponseEntity.ok(lifelineService.useAlternateQuestion(sessionId, difficultyLevel));
     }
 
-    /*
+
     @GetMapping("/lifeline/fiftyfifty")
-    public ResponseEntity<List<String>> useFiftyFifty(@RequestParam("sessionId") String sessionId) {
+    public ResponseEntity<List<String>> useFiftyFifty(@RequestParam("sessionId") String sessionId) throws JsonProcessingException {
         return ResponseEntity.ok(quizService.useFiftyFifty(sessionId));
     }
 
+    /*
     @GetMapping("/lifeline/second-chance")
     public ResponseEntity<Void> useSecondChance(@RequestParam("sessionId") String sessionId) {
         quizService.useSecondChance(sessionId);
