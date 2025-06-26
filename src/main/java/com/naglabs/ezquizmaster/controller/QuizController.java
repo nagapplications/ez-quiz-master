@@ -1,6 +1,8 @@
 package com.naglabs.ezquizmaster.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.naglabs.ezquizmaster.dto.Question;
+import com.naglabs.ezquizmaster.service.LifelineService;
 import com.naglabs.ezquizmaster.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,9 @@ public class QuizController {
 
     @Autowired
     private QuizService quizService;
+
+    @Autowired
+    private LifelineService lifelineService;
 
     //frontend need to call the below with post including jsession id, till then its get
     @GetMapping("/start")
@@ -51,12 +56,13 @@ public class QuizController {
         return ResponseEntity.ok(nextQuestion);
     }
 
-    /*
+
     @GetMapping("/lifeline/alternate")
-    public ResponseEntity<Question> useAlternate(@RequestParam("sessionId") String sessionId) {
-        return ResponseEntity.ok(quizService.useAlternateQuestion(sessionId));
+    public ResponseEntity<Question> useAlternate(@RequestParam("sessionId") String sessionId, @RequestParam("difficultyLevel") String difficultyLevel) throws JsonProcessingException {
+        return ResponseEntity.ok(lifelineService.useAlternateQuestion(sessionId, difficultyLevel));
     }
 
+    /*
     @GetMapping("/lifeline/fiftyfifty")
     public ResponseEntity<List<String>> useFiftyFifty(@RequestParam("sessionId") String sessionId) {
         return ResponseEntity.ok(quizService.useFiftyFifty(sessionId));

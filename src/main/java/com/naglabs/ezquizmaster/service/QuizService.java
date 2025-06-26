@@ -24,6 +24,8 @@ public class QuizService {
     private UserSessionRepository userSessionRepository;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private LifelineService lifelineService;
 
     public String startQuiz(String email) throws Exception {
         // Fetch and parse questions
@@ -58,6 +60,7 @@ public class QuizService {
         altQuestion = orderedQstnList.get(18);
         lifeLineAlternateMap.put(altQuestion.getDifficultyLevel(), altQuestion);
 
+        //Add Qno to questions and Map
         for (int i = 0; i <= uiDisplayQuestionList.size() - 1; i++) {
             Question eachQuestion = uiDisplayQuestionList.get(i);
             eachQuestion.setId(i);
@@ -82,8 +85,25 @@ public class QuizService {
         return Question.copyOnlyQstnAndOptions(firstQuestion);
     }
 
+    public Question submitAnswer(String sessionId, String selectedOption) throws Exception {
+        Question currentQuestion = getQuestionFromSession(sessionId, false);
+        boolean isRightAnswerChosen = currentQuestion.getCorrectOption().equalsIgnoreCase(selectedOption);
+        if (isRightAnswerChosen) {
+            Question nextQuestionFromSession = getQuestionFromSession(sessionId, true);
+            return Question.copyOnlyQstnAndOptions(nextQuestionFromSession);
+        } else {
+            //put custom expception WrongAnswerException
+            throw new IllegalArgumentException("Incorrect answer selected.");
+        }
+    }
+
     public Question getQuestionFromSession(String sessionId, Boolean next) throws JsonProcessingException {
         UserSession session = userSessionRepository.findById(sessionId).orElseThrow(() -> new UserSessionNotFoundException("Session ID not found: " + sessionId));
+
+        if (session.getCurrentAlternateQuestionWithDifficultyLevel() != null) {
+            return lifelineService.getAlternateQuestionServedCurrently(session);
+        }
+
         Map<Integer, Question> sessionOriginalQuestionMap = objectMapper.readValue(session.getPrimaryQuestionsJson(), new TypeReference<>() {
         });
 
@@ -97,18 +117,6 @@ public class QuizService {
         }
 
         return sessionOriginalQuestionMap.get(qno);
-    }
-
-    public Question submitAnswer(String sessionId, String selectedOption) throws Exception {
-        Question currentQuestion = getQuestionFromSession(sessionId, false);
-        boolean isRightAnswerChosen = currentQuestion.getCorrectOption().equalsIgnoreCase(selectedOption);
-        if (isRightAnswerChosen) {
-            Question nextQuestionFromSession = getQuestionFromSession(sessionId, true);
-            return Question.copyOnlyQstnAndOptions(nextQuestionFromSession);
-        } else {
-            //put custom expception WrongAnswerException
-            throw new IllegalArgumentException("Incorrect answer selected.");
-        }
     }
 
 }

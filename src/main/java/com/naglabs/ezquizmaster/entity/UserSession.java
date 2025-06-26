@@ -23,6 +23,7 @@ public class UserSession {
     private int remainingLifelines = 3;
 
     private boolean usedAlternate = false;
+    private String currentAlternateQuestionWithDifficultyLevel;
     private boolean usedFiftyFifty = false;
     private boolean usedSecondChance = false;
 
