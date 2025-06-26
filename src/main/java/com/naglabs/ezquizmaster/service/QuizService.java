@@ -131,8 +131,6 @@ public class QuizService {
 
         // Shuffle and pick 2
         Collections.shuffle(wrongOptions);
-        System.out.println(wrongOptions.get(0));
-        System.out.println(wrongOptions.get(1));
         return Arrays.asList(wrongOptions.get(0), wrongOptions.get(1));
     }
 }
