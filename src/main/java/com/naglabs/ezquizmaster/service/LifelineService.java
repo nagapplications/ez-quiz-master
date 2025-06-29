@@ -35,13 +35,13 @@ public class LifelineService {
         Map<String, Question> sessionAlternateMap = objectMapper.readValue(session.getAlternateQuestionsJson(), new TypeReference<>() {
         });
 
-        if (session.isAlternateUsed()) {
+        if (session.isUsedAlternate()) {
             throw new LifelineAlreadyUsedException("Alternate lifeline already used.");
         }
 
         Question alternateQuestion = sessionAlternateMap.get(currentQuestion.getDifficultyLevel());
 
-        session.setAlternateUsed(true);
+        session.setUsedAlternate(true);
         session.setRemainingLifelines(session.getRemainingLifelines() - 1);
         userSessionRepository.save(session);
         return Question.copyOnlyQstnAndOptions(alternateQuestion);

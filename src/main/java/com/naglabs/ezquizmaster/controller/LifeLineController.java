@@ -8,9 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@RestController
 @RequestMapping("/api/lifeline")
 public class LifeLineController {
 
@@ -20,6 +22,11 @@ public class LifeLineController {
     @GetMapping("/alternate")
     public ResponseEntity<Question> getAlternateQuestion(@RequestParam("sessionId") String sessionId) throws JsonProcessingException {
         return ResponseEntity.ok(lifelineService.getAlternateQuestion(sessionId));
+    }
+
+    @GetMapping("/evaluateAlternate")
+    public ResponseEntity<Question> evaluateAlternate(@RequestParam("sessionId") String sessionId, @RequestParam("option") String option) throws JsonProcessingException {
+        return ResponseEntity.ok(lifelineService.evaluateAnswerForAlternate(sessionId, option));
     }
 
     @GetMapping("/fiftyfifty")
