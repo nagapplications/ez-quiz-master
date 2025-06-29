@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Stream;
 
-@Service    
+@Service
 public class GameLaunchService {
     @Autowired
     private OpenAiService openAiService;

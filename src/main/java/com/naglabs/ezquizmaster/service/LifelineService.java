@@ -41,17 +41,24 @@ public class LifelineService {
 
         Question alternateQuestion = sessionAlternateMap.get(currentQuestion.getDifficultyLevel());
 
-        //session.setServedAlternateQuestion(alternateQuestion);
         session.setAlternateUsed(true);
         session.setRemainingLifelines(session.getRemainingLifelines() - 1);
         userSessionRepository.save(session);
         return Question.copyOnlyQstnAndOptions(alternateQuestion);
     }
 
-    public Question evaluateAnswerForAlternate(UserSession session, String option) throws JsonProcessingException {
-        Question alternateQuestion = new Question();//session.getServedAlternateQuestion();
+    public Question evaluateAnswerForAlternate(String sessionId, String option) throws JsonProcessingException {
+        UserSession session = userSessionRepository.findById(sessionId)
+                .orElseThrow(() -> new UserSessionNotFoundException("Session ID not found: " + sessionId));
 
-        if (option.equalsIgnoreCase(alternateQuestion.getCorrectOption())) {
+        Map<String, Question> sessionAlternateMap = objectMapper.readValue(session.getAlternateQuestionsJson(), new TypeReference<>() {
+        });
+
+        Question question = questionHelper.getQuestion(session, session.getCurrentQuestionIndex());
+
+        question = sessionAlternateMap.get(question.getDifficultyLevel());
+
+        if (option.equalsIgnoreCase(question.getCorrectOption())) {
             session.setCurrentQuestionIndex(session.getCurrentQuestionIndex() + 1);
             return questionHelper.getQuestion(session, session.getCurrentQuestionIndex());
         }
