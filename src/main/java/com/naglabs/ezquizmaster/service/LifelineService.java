@@ -41,7 +41,7 @@ public class LifelineService {
 
         Question alternateQuestion = sessionAlternateMap.get(currentQuestion.getDifficultyLevel());
 
-        session.setServedAlternateQuestion(alternateQuestion);
+        //session.setServedAlternateQuestion(alternateQuestion);
         session.setAlternateUsed(true);
         session.setRemainingLifelines(session.getRemainingLifelines() - 1);
         userSessionRepository.save(session);
@@ -49,7 +49,7 @@ public class LifelineService {
     }
 
     public Question evaluateAnswerForAlternate(UserSession session, String option) throws JsonProcessingException {
-        Question alternateQuestion = session.getServedAlternateQuestion();
+        Question alternateQuestion = new Question();//session.getServedAlternateQuestion();
 
         if (option.equalsIgnoreCase(alternateQuestion.getCorrectOption())) {
             session.setCurrentQuestionIndex(session.getCurrentQuestionIndex() + 1);

@@ -9,10 +9,12 @@ import com.naglabs.ezquizmaster.entity.UserSession;
 import com.naglabs.ezquizmaster.repository.UserSessionRepository;
 import com.naglabs.ezquizmaster.util.PromptGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Stream;
 
+@Service    
 public class GameLaunchService {
     @Autowired
     private OpenAiService openAiService;

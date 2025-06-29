@@ -24,7 +24,6 @@ public class UserSession {
     private int remainingLifelines = 3;
 
     private boolean alternateUsed;
-    private Question servedAlternateQuestion;
     private String currentAlternateQuestionWithDifficultyLevel;
     private boolean usedFiftyFifty = false;
     private boolean usedSecondChance = false;
