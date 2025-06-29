@@ -2,33 +2,35 @@ package com.naglabs.ezquizmaster.helper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.naglabs.ezquizmaster.dto.Question;
 import com.naglabs.ezquizmaster.entity.UserSession;
-import com.naglabs.ezquizmaster.exception.UserSessionNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+@Component
 public class QuestionHelper {
 
-//    public Question getQuestionFromSession(String sessionId, Boolean next) throws JsonProcessingException {
-//        UserSession session = userSessionRepository.findById(sessionId).orElseThrow(() -> new UserSessionNotFoundException("Session ID not found: " + sessionId));
-//
-//        if (session.getCurrentAlternateQuestionWithDifficultyLevel() != null) {
-//            return lifelineService.getAlternateQuestionServedCurrently(session);
-//        }
-//
-//        Map<Integer, Question> sessionOriginalQuestionMap = objectMapper.readValue(session.getPrimaryQuestionsJson(), new TypeReference<>() {
-//        });
-//
-//        int qno = session.getCurrentQuestionIndex();
-//
-//        if (next) {
-//            qno += 1;
-//            session.setCurrentQuestionIndex(qno);
-//            session.setScore(session.getScore() + 10);
-//            userSessionRepository.save(session); // Persist changes
-//        }
-//
-//        return sessionOriginalQuestionMap.get(qno);
-//    }
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    public Question getQuestion(UserSession session, Integer qno) throws JsonProcessingException {
+        Map<Integer, Question> primayQuestionMap = objectMapper.readValue(session.getPrimaryQuestionsJson(), new TypeReference<>() {
+        });
+        return primayQuestionMap.get(qno);
+    }
+
+    public Question evaluateAnswer(UserSession session, Integer qno, String option) throws JsonProcessingException {
+        if (isRightAnswerChosen(session, qno, option)) {
+            return getQuestion(session, qno + 1);
+        }
+        throw new IllegalArgumentException("Incorrect answer selected.");
+    }
+
+    public boolean isRightAnswerChosen(UserSession session, Integer qno, String selectedOption) throws JsonProcessingException {
+        Question currentQuestion = getQuestion(session, qno);
+        return selectedOption.equalsIgnoreCase(currentQuestion.getCorrectOption());
+    }
 }

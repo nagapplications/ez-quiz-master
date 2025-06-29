@@ -1,8 +1,7 @@
 package com.naglabs.ezquizmaster.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.naglabs.ezquizmaster.dto.Question;
-import com.naglabs.ezquizmaster.service.LifelineService;
+import com.naglabs.ezquizmaster.service.GameLaunchService;
 import com.naglabs.ezquizmaster.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,17 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/quiz")
 public class QuizController {
 
     @Autowired
     private QuizService quizService;
-
     @Autowired
-    private LifelineService lifelineService;
+    private GameLaunchService gameLaunchService;
 
     //frontend need to call the below with post including jsession id, till then its get
     @GetMapping("/start")
@@ -39,7 +35,7 @@ public class QuizController {
         }
 
         System.out.println("Starting quiz for user email: " + email);
-        String sessionId = quizService.startQuiz(email);
+        String sessionId = gameLaunchService.startQuiz(email);
         System.out.println("Quiz session created with ID: " + sessionId);
         return ResponseEntity.ok(sessionId);
     }
@@ -48,36 +44,14 @@ public class QuizController {
 
     @GetMapping("/getQuestion")
     public ResponseEntity<Question> getQuestion(@RequestParam("sessionId") String sessionId) throws Exception {
-        Question firstQuestion = quizService.getQuestion(sessionId);
+        Question firstQuestion = quizService.getFirstQuestion(sessionId);
         return firstQuestion == null ? ResponseEntity.noContent().build() : ResponseEntity.ok(firstQuestion);
     }
 
     @GetMapping("/submitAnswer")
-    public ResponseEntity<Question> submitAnswer(@RequestParam("sessionId") String sessionId, @RequestParam("option") String option) throws Exception {
-        Question nextQuestion = quizService.submitAnswer(sessionId, option);
+    public ResponseEntity<Question> submitAnswer(@RequestParam("sessionId") String sessionId, @RequestParam("qno") Integer qno, @RequestParam("option") String option) throws Exception {
+        Question nextQuestion = quizService.submitAnswer(sessionId, qno, option);
         return ResponseEntity.ok(nextQuestion);
     }
-
-
-    @GetMapping("/lifeline/alternate")
-    public ResponseEntity<Question> useAlternate(@RequestParam("sessionId") String sessionId, @RequestParam("difficultyLevel") String difficultyLevel) throws JsonProcessingException {
-        return ResponseEntity.ok(lifelineService.useAlternateQuestion(sessionId, difficultyLevel));
-    }
-
-
-    @GetMapping("/lifeline/fiftyfifty")
-    public ResponseEntity<List<String>> useFiftyFifty(@RequestParam("sessionId") String sessionId) throws JsonProcessingException {
-        return ResponseEntity.ok(quizService.useFiftyFifty(sessionId));
-    }
-
-    /*
-    @GetMapping("/lifeline/second-chance")
-    public ResponseEntity<Void> useSecondChance(@RequestParam("sessionId") String sessionId) {
-        quizService.useSecondChance(sessionId);
-        return ResponseEntity.ok().build();
-    }
-    */
-
-
 }
 

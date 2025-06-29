@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class Question {
+
     private Integer id;
     private String question;
     private List<String> options;

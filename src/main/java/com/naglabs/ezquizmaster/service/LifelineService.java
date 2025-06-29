@@ -7,11 +7,12 @@ import com.naglabs.ezquizmaster.dto.Question;
 import com.naglabs.ezquizmaster.entity.UserSession;
 import com.naglabs.ezquizmaster.exception.LifelineAlreadyUsedException;
 import com.naglabs.ezquizmaster.exception.UserSessionNotFoundException;
+import com.naglabs.ezquizmaster.helper.QuestionHelper;
 import com.naglabs.ezquizmaster.repository.UserSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class LifelineService {
@@ -20,34 +21,67 @@ public class LifelineService {
     private UserSessionRepository userSessionRepository;
 
     @Autowired
+    QuestionHelper questionHelper;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
-    public Question useAlternateQuestion(String sessionId, String difficultyLevel) throws JsonProcessingException {
+    public Question getAlternateQuestion(String sessionId) throws JsonProcessingException {
         UserSession session = userSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new UserSessionNotFoundException("Session ID not found: " + sessionId));
+
+        Question currentQuestion = questionHelper.getQuestion(session, session.getCurrentQuestionIndex());
 
         Map<String, Question> sessionAlternateMap = objectMapper.readValue(session.getAlternateQuestionsJson(), new TypeReference<>() {
         });
 
-        if (session.isUsedAlternate()) {
+        if (session.isAlternateUsed()) {
             throw new LifelineAlreadyUsedException("Alternate lifeline already used.");
         }
 
-        Question alternateQuestion = sessionAlternateMap.get(difficultyLevel);
+        Question alternateQuestion = sessionAlternateMap.get(currentQuestion.getDifficultyLevel());
 
-        session.setUsedAlternate(true);
+        session.setServedAlternateQuestion(alternateQuestion);
+        session.setAlternateUsed(true);
         session.setRemainingLifelines(session.getRemainingLifelines() - 1);
-        session.setCurrentAlternateQuestionWithDifficultyLevel(difficultyLevel);
         userSessionRepository.save(session);
         return Question.copyOnlyQstnAndOptions(alternateQuestion);
     }
 
-    public Question getAlternateQuestionServedCurrently(UserSession session) throws JsonProcessingException {
-        Map<String, Question> sessionAlternateMap = objectMapper.readValue(session.getAlternateQuestionsJson(), new TypeReference<>() {
-        });
+    public Question evaluateAnswerForAlternate(UserSession session, String option) throws JsonProcessingException {
+        Question alternateQuestion = session.getServedAlternateQuestion();
 
-        Question alternateQuestion = sessionAlternateMap.get(session.getCurrentAlternateQuestionWithDifficultyLevel());
-        session.setCurrentAlternateQuestionWithDifficultyLevel(null);
-        return alternateQuestion;
+        if (option.equalsIgnoreCase(alternateQuestion.getCorrectOption())) {
+            session.setCurrentQuestionIndex(session.getCurrentQuestionIndex() + 1);
+            return questionHelper.getQuestion(session, session.getCurrentQuestionIndex());
+        }
+        throw new IllegalArgumentException("Incorrect answer selected.");
+    }
+
+    public List<String> useFiftyFifty(String sessionId, Integer qno) throws JsonProcessingException {
+        UserSession session = userSessionRepository.findById(sessionId)
+                .orElseThrow(() -> new UserSessionNotFoundException("Session ID not found: " + sessionId));
+
+        Question currentQuestion = questionHelper.getQuestion(session, qno);
+
+        List<String> wrongOptions = new ArrayList<>();
+        for (String eachOption : currentQuestion.getOptions()) {
+            if (!eachOption.equalsIgnoreCase(currentQuestion.getCorrectOption())) {
+                wrongOptions.add(eachOption);
+            }
+        }
+
+        // Shuffle and pick 2
+        Collections.shuffle(wrongOptions);
+        return Arrays.asList(wrongOptions.get(0), wrongOptions.get(1));
+    }
+
+    public boolean useSecondChance(String sessionId, Integer qno, String option) throws JsonProcessingException {
+        UserSession session = userSessionRepository.findById(sessionId).orElseThrow(() -> new UserSessionNotFoundException("Session ID not found: " + sessionId));
+        if (session.isUsedSecondChance()) {
+            throw new LifelineAlreadyUsedException("Second chance lifeline already used.");
+        }
+        session.setUsedSecondChance(true);
+        return questionHelper.isRightAnswerChosen(session, qno, option);
     }
 }

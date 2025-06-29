@@ -1,5 +1,6 @@
 package com.naglabs.ezquizmaster.entity;
 
+import com.naglabs.ezquizmaster.dto.Question;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,7 +23,8 @@ public class UserSession {
 
     private int remainingLifelines = 3;
 
-    private boolean usedAlternate = false;
+    private boolean alternateUsed;
+    private Question servedAlternateQuestion;
     private String currentAlternateQuestionWithDifficultyLevel;
     private boolean usedFiftyFifty = false;
     private boolean usedSecondChance = false;
