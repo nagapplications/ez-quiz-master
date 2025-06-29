@@ -71,3 +71,5 @@ OpenAI raw response: {
   "service_tier": "default",
   "system_fingerprint": null
 }
+
+Swagger link : http://localhost:8080/ezquizmaster/swagger-ui/index.html#/life-line-controller/useSecondChance
