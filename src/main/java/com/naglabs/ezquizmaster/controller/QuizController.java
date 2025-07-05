@@ -8,11 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/quiz")
 public class QuizController {
@@ -24,14 +23,10 @@ public class QuizController {
 
     //frontend need to call the below with post including jsession id, till then its get
     @GetMapping("/start")
-    public ResponseEntity<String> startQuiz(@AuthenticationPrincipal OAuth2User principal) throws Exception {
-        if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
-        }
-
-        String email = principal.getAttribute("email");
+    public ResponseEntity<String> startQuiz(@AuthenticationPrincipal Jwt jwt) throws Exception {
+        String email = jwt.getClaimAsString("email");
         if (email == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email not found in user details");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email not found in token");
         }
 
         System.out.println("Starting quiz for user email: " + email);
@@ -39,6 +34,7 @@ public class QuizController {
         System.out.println("Quiz session created with ID: " + sessionId);
         return ResponseEntity.ok(sessionId);
     }
+
 
     //TODO : AFTER UI IS READY, CHANGE THE BELOW TO POST MAPPINGS
 
@@ -54,4 +50,3 @@ public class QuizController {
         return ResponseEntity.ok(nextQuestion);
     }
 }
-
