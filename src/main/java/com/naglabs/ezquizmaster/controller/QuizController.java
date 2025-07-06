@@ -38,7 +38,7 @@ public class QuizController {
 
     //TODO : AFTER UI IS READY, CHANGE THE BELOW TO POST MAPPINGS
 
-    @GetMapping("/getQuestion")
+    @PostMapping("/getQuestion")
     public ResponseEntity<Question> getQuestion(@RequestParam("sessionId") String sessionId) throws Exception {
         Question firstQuestion = quizService.getFirstQuestion(sessionId);
         return firstQuestion == null ? ResponseEntity.noContent().build() : ResponseEntity.ok(firstQuestion);
