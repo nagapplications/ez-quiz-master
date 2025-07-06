@@ -44,7 +44,7 @@ public class QuizController {
         return firstQuestion == null ? ResponseEntity.noContent().build() : ResponseEntity.ok(firstQuestion);
     }
 
-    @GetMapping("/submitAnswer")
+    @PostMapping("/submitAnswer")
     public ResponseEntity<Question> submitAnswer(@RequestParam("sessionId") String sessionId, @RequestParam("qno") Integer qno, @RequestParam("option") String option) throws Exception {
         Question nextQuestion = quizService.submitAnswer(sessionId, qno, option);
         return ResponseEntity.ok(nextQuestion);

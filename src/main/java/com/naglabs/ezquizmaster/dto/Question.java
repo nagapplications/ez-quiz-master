@@ -17,12 +17,13 @@ public class Question {
     public Question() {
     }
 
-    public Question(String question, List<String> options) {
+    public Question(Integer id,String question, List<String> options) {
+        this.id = id;
         this.question = question;
         this.options = new ArrayList<>(options); // defensive copy even if caller forgets
     }
 
     public static Question copyOnlyQstnAndOptions(Question other) {
-        return new Question(other.question, new ArrayList<>(other.options));
+        return new Question(other.id, other.question, new ArrayList<>(other.options));
     }
 }
