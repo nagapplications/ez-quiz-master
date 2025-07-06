@@ -22,7 +22,7 @@ public class QuizController {
     private GameLaunchService gameLaunchService;
 
     //frontend need to call the below with post including jsession id, till then its get
-    @GetMapping("/start")
+    @PostMapping("/start")
     public ResponseEntity<String> startQuiz(@AuthenticationPrincipal Jwt jwt) throws Exception {
         String email = jwt.getClaimAsString("email");
         if (email == null) {
