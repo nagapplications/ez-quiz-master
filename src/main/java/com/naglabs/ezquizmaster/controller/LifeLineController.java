@@ -27,12 +27,12 @@ public class LifeLineController {
         return ResponseEntity.ok(lifelineService.evaluateAnswerForAlternate(sessionId, option));
     }
 
-    @GetMapping("/fiftyfifty")
+    @PostMapping("/fiftyFifty")
     public ResponseEntity<List<String>> useFiftyFifty(@RequestParam("sessionId") String sessionId, @RequestParam("qno") Integer qno) throws JsonProcessingException {
         return ResponseEntity.ok(lifelineService.useFiftyFifty(sessionId, qno));
     }
 
-    @GetMapping("/secondchance")
+    @GetMapping("/secondChance")
     public ResponseEntity<Boolean> useSecondChance(@RequestParam("sessionId") String sessionId, @RequestParam("qno") Integer qno, @RequestParam("option") String option) throws JsonProcessingException {
         return ResponseEntity.ok(lifelineService.useSecondChance(sessionId, qno, option));
     }
