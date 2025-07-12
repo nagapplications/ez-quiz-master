@@ -41,7 +41,7 @@ public class LifelineService {
 
         Question alternateQuestion = sessionAlternateMap.get(currentQuestion.getDifficultyLevel());
 
-        session.setUsedAlternate(true);
+        //session.setUsedAlternate(true);
         session.setRemainingLifelines(session.getRemainingLifelines() - 1);
         userSessionRepository.save(session);
         return Question.copyOnlyQstnAndOptions(alternateQuestion);

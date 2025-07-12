@@ -5,13 +5,11 @@ import com.naglabs.ezquizmaster.dto.Question;
 import com.naglabs.ezquizmaster.service.LifelineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/lifeline")
 public class LifeLineController {
@@ -19,12 +17,12 @@ public class LifeLineController {
     @Autowired
     private LifelineService lifelineService;
 
-    @GetMapping("/alternate")
+    @PostMapping("/alternate")
     public ResponseEntity<Question> getAlternateQuestion(@RequestParam("sessionId") String sessionId) throws JsonProcessingException {
         return ResponseEntity.ok(lifelineService.getAlternateQuestion(sessionId));
     }
 
-    @GetMapping("/evaluateAlternate")
+    @PostMapping("/evaluateAlternate")
     public ResponseEntity<Question> evaluateAlternate(@RequestParam("sessionId") String sessionId, @RequestParam("option") String option) throws JsonProcessingException {
         return ResponseEntity.ok(lifelineService.evaluateAnswerForAlternate(sessionId, option));
     }
