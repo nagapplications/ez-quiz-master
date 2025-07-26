@@ -23,6 +23,24 @@ public class GameLaunchService {
     @Autowired
     private ObjectMapper objectMapper;
 
+    public String startQuiz(String email) throws Exception {
+        // Fetch and parse questions
+        String prompt = PromptGenerator.getPrompt();
+        OpenAiResponse openAiResponse = openAiService.generateQuestionsLocal(prompt);
+        String content = openAiResponse.getChoices().getFirst().getMessage().getContent();
+        List<Question> allQuestionsAI = objectMapper.readValue(content, new TypeReference<>() {
+        });
+
+        Map<Integer, Question> uiDisplayQuestionMap = new LinkedHashMap<>();
+        Map<String, Question> lifeLineAlternateMap = new LinkedHashMap<>();
+
+        organizeGameQuestions(allQuestionsAI, uiDisplayQuestionMap, lifeLineAlternateMap);
+
+        UserSession session = saveAndGetSession(email, uiDisplayQuestionMap, lifeLineAlternateMap);
+
+        return session.getSessionId();
+    }
+
     private static void organizeGameQuestions(List<Question> allQuestionsAI, Map<Integer, Question> uiDisplayQuestionMap, Map<String, Question> lifeLineAlternateMap) {
         List<Question> orderedQstnList = Stream.of("easy", "medium", "hard", "evil")
                 .flatMap(difficulty -> allQuestionsAI.stream()
@@ -54,24 +72,6 @@ public class GameLaunchService {
             eachQuestion.setId(i);
             uiDisplayQuestionMap.put(i, eachQuestion);
         }
-    }
-
-    public String startQuiz(String email) throws Exception {
-        // Fetch and parse questions
-        String prompt = PromptGenerator.getPrompt();
-        OpenAiResponse openAiResponse = openAiService.generateQuestionsLocal(prompt);
-        String content = openAiResponse.getChoices().getFirst().getMessage().getContent();
-        List<Question> allQuestionsAI = objectMapper.readValue(content, new TypeReference<>() {
-        });
-
-        Map<Integer, Question> uiDisplayQuestionMap = new LinkedHashMap<>();
-        Map<String, Question> lifeLineAlternateMap = new LinkedHashMap<>();
-
-        organizeGameQuestions(allQuestionsAI, uiDisplayQuestionMap, lifeLineAlternateMap);
-
-        UserSession session = saveAndGetSession(email, uiDisplayQuestionMap, lifeLineAlternateMap);
-
-        return session.getSessionId();
     }
 
     private UserSession saveAndGetSession(String email, Map<Integer, Question> uiDisplayQuestionMap, Map<String, Question> lifeLineAlternateMap) throws JsonProcessingException {
