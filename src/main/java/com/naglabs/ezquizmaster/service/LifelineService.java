@@ -44,6 +44,7 @@ public class LifelineService {
         //session.setUsedAlternate(true);
         session.setRemainingLifelines(session.getRemainingLifelines() - 1);
         userSessionRepository.save(session);
+        alternateQuestion.setId(session.getCurrentQuestionIndex());
         return Question.copyOnlyQstnAndOptions(alternateQuestion);
     }
 
