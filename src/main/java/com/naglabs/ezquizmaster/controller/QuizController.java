@@ -43,8 +43,8 @@ public class QuizController {
     }
 
     @PostMapping("/submitAnswer")
-    public ResponseEntity<QuestionResponse> submitAnswer(@RequestParam("sessionId") String sessionId, @RequestParam("qno") Integer qno, @RequestParam("option") String option) throws Exception {
-        QuestionResponse questionResponse = quizService.submitAnswer(sessionId, qno, option);
+    public ResponseEntity<QuestionResponse> submitAnswer(@RequestParam("sessionId") String sessionId, @RequestParam("qno") Integer qno, @RequestParam("option") String option, @RequestParam(value = "secondChanceChoosen", defaultValue = "false") Boolean secondChanceChoosen) throws Exception {
+        QuestionResponse questionResponse = quizService.submitAnswer(sessionId, qno, option, secondChanceChoosen);
         return ResponseEntity.ok(questionResponse);
     }
 }

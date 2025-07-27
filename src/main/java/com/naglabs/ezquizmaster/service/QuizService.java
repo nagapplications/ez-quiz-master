@@ -26,11 +26,11 @@ public class QuizService {
         return Question.copyOnlyQstnAndOptions(firstQuestion);
     }
 
-    public QuestionResponse submitAnswer(String sessionId, Integer qno, String option) throws Exception {
+    public QuestionResponse submitAnswer(String sessionId, Integer qno, String option, Boolean secondChanceChoosen) throws Exception {
         UserSession session = userSessionRepository.findById(sessionId).orElseThrow(() -> new UserSessionNotFoundException("Session ID not found: " + sessionId));
 
         QuestionResponse questionResponse = questionHelper.evaluateAnswer(session, qno, option);
-        if ("win".equals(questionResponse.getStatus())) {
+        if ("win".equals(questionResponse.getStatus()) || secondChanceChoosen) {
             return questionResponse;
         }
         session.setCurrentQuestionIndex(questionResponse.getQuestion().getId());
