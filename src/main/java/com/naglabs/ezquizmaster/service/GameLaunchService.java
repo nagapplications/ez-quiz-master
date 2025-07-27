@@ -67,10 +67,10 @@ public class GameLaunchService {
         lifeLineAlternateMap.put(altQuestion.getDifficultyLevel(), altQuestion);
 
         //Add Qno to questions and Map
-        for (int i = 1; i <= uiDisplayQuestionList.size()-1; i++) {
+        for (int i = 0; i <= uiDisplayQuestionList.size()-1; i++) {
             Question eachQuestion = uiDisplayQuestionList.get(i);
-            eachQuestion.setId(i);
-            uiDisplayQuestionMap.put(i, eachQuestion);
+            eachQuestion.setId(i+1);
+            uiDisplayQuestionMap.put(i+1, eachQuestion);
         }
     }
 
