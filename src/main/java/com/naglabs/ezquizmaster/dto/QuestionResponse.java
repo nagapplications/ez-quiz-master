@@ -1,11 +1,17 @@
 package com.naglabs.ezquizmaster.dto;
 
-import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import java.util.List;
-
-@AllArgsConstructor
+@Data
 public class QuestionResponse {
+    private String status;
+    private Question question;
+    private String message;
 
-    private List<Question> questions;
+    public QuestionResponse(String status, Question question, String message) {
+        this.status = status;
+        this.question = question;
+        this.message = message;
+    }
+
 }

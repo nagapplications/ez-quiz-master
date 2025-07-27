@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.naglabs.ezquizmaster.dto.Question;
+import com.naglabs.ezquizmaster.dto.QuestionResponse;
 import com.naglabs.ezquizmaster.entity.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,11 +23,15 @@ public class QuestionHelper {
         return primayQuestionMap.get(qno);
     }
 
-    public Question evaluateAnswer(UserSession session, Integer qno, String option) throws JsonProcessingException {
+    public QuestionResponse evaluateAnswer(UserSession session, Integer qno, String option) throws JsonProcessingException {
         if (isRightAnswerChosen(session, qno, option)) {
-            return getQuestion(session, qno + 1);
+            if (qno == 15) {
+                return new QuestionResponse("win", null, "Congratulations, you have answered all the 15 questions. Game is ended.");
+            }
+            Question nextQuestion = getQuestion(session, qno + 1);
+            return new QuestionResponse("next", Question.copyOnlyQstnAndOptions(nextQuestion), null);
         }
-        throw new IllegalArgumentException("Incorrect answer selected.");
+        return new QuestionResponse("fail", null, "Incorrect answer selected.");
     }
 
     public boolean isRightAnswerChosen(UserSession session, Integer qno, String selectedOption) throws JsonProcessingException {

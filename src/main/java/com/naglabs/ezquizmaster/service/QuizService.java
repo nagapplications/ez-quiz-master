@@ -2,6 +2,7 @@ package com.naglabs.ezquizmaster.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.naglabs.ezquizmaster.dto.Question;
+import com.naglabs.ezquizmaster.dto.QuestionResponse;
 import com.naglabs.ezquizmaster.entity.UserSession;
 import com.naglabs.ezquizmaster.exception.UserSessionNotFoundException;
 import com.naglabs.ezquizmaster.helper.QuestionHelper;
@@ -25,14 +26,17 @@ public class QuizService {
         return Question.copyOnlyQstnAndOptions(firstQuestion);
     }
 
-    public Question submitAnswer(String sessionId, Integer qno, String option) throws Exception {
+    public QuestionResponse submitAnswer(String sessionId, Integer qno, String option) throws Exception {
         UserSession session = userSessionRepository.findById(sessionId).orElseThrow(() -> new UserSessionNotFoundException("Session ID not found: " + sessionId));
 
-        Question nextQuestion = questionHelper.evaluateAnswer(session, qno, option);
-        session.setCurrentQuestionIndex(nextQuestion.getId());
+        QuestionResponse questionResponse = questionHelper.evaluateAnswer(session, qno, option);
+        if ("win".equals(questionResponse.getStatus())) {
+            return questionResponse;
+        }
+        session.setCurrentQuestionIndex(questionResponse.getQuestion().getId());
         session.setScore(session.getScore() + 10);
         userSessionRepository.save(session); // Persist changes
 
-        return Question.copyOnlyQstnAndOptions(nextQuestion);
+        return questionResponse;
     }
 }

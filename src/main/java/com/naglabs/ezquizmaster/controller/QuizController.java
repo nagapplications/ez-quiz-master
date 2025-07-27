@@ -1,6 +1,7 @@
 package com.naglabs.ezquizmaster.controller;
 
 import com.naglabs.ezquizmaster.dto.Question;
+import com.naglabs.ezquizmaster.dto.QuestionResponse;
 import com.naglabs.ezquizmaster.service.GameLaunchService;
 import com.naglabs.ezquizmaster.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,6 @@ public class QuizController {
         return ResponseEntity.ok(sessionId);
     }
 
-
-    //TODO : AFTER UI IS READY, CHANGE THE BELOW TO POST MAPPINGS
-
     @PostMapping("/getQuestion")
     public ResponseEntity<Question> getQuestion(@RequestParam("sessionId") String sessionId) throws Exception {
         Question firstQuestion = quizService.getFirstQuestion(sessionId);
@@ -45,8 +43,8 @@ public class QuizController {
     }
 
     @PostMapping("/submitAnswer")
-    public ResponseEntity<Question> submitAnswer(@RequestParam("sessionId") String sessionId, @RequestParam("qno") Integer qno, @RequestParam("option") String option) throws Exception {
-        Question nextQuestion = quizService.submitAnswer(sessionId, qno, option);
-        return ResponseEntity.ok(nextQuestion);
+    public ResponseEntity<QuestionResponse> submitAnswer(@RequestParam("sessionId") String sessionId, @RequestParam("qno") Integer qno, @RequestParam("option") String option) throws Exception {
+        QuestionResponse questionResponse = quizService.submitAnswer(sessionId, qno, option);
+        return ResponseEntity.ok(questionResponse);
     }
 }
